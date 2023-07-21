@@ -10,11 +10,11 @@ curses.cbreak()
 stdscr.keypad(True)
 
 stdscr.clear()
-word = "Hello World!"
-stdscr.addstr(10,0, word)
+sentence = "The quick brown fox..."
+#word = "Hello World!"
+stdscr.addstr(10,0, sentence)
 stdscr.refresh()
 
-correct = []
 """
 x = 0
 
@@ -33,24 +33,64 @@ for let in word:
         x = 0
         answer.refresh()
 """
+#def current_word(setence):
+    #hello
 
-x = 0
-y = len(word)
-z = y
-q = 0
-while z != 0:
-    a = answer.getch(12,x)
-    x += 1
-    if a == ord(word[q]):
-        q += 1
-        z -= 1
-        if a == ord(" "):
-            answer.clear()
-            x = 0
-            answer.refresh()
+'''
+for letter in sentence:
+    if letter == " ":
+        words.append(letter)
+    else:
+        hold = letter
+        check = letter
+        while check != " ":
+            check += 1
+            if check == " ":
+                letter = check
+        words.append(sentence[hold, check])
+'''
 
+typed = []
 
+cursor = 0
+sentence_len = len(sentence)
+sentence_index = 0
+while sentence_len != 0:
+    type = answer.getch(12,cursor)
+    cursor += 1
+    typed.append(type)
+    #if type == ord (sentence [sentence_index]):
+    for letter in typed:
+        if letter == sentence[sentence_index]:
+            sentence_index += 1
+            sentence_len -= 1
+    if type == ord(" "):
+        answer.clear()
+        cursor = 0
+        answer.refresh()
+    if type == 127:
+        answer.delch(12, cursor)
+        answer.delch(12, cursor - 1)
+        answer.delch(12, cursor - 2)
+        cursor -= 2
+        typed.pop()
+        answer.refresh()
 
+'''
+#incorporate into main code
+index_ = 0
+checker = 1
+while index_ != len(typed) + 1:
+    for let in typed:
+        if let == letters[index_]:
+            index_ += 1
+        else:
+            checker = -1
+    if checker == 1:
+        print("True")
+            
+'''
+ 
 
 
 curses.nocbreak()
