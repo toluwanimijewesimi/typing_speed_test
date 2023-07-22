@@ -49,8 +49,11 @@ for letter in sentence:
                 letter = check
         words.append(sentence[hold, check])
 '''
-
+li_sentence = []
 typed = []
+
+for lett in sentence:
+    li_sentence.append(ord(lett))
 
 cursor = 0
 sentence_len = len(sentence)
@@ -59,15 +62,17 @@ while sentence_len != 0:
     type = answer.getch(12,cursor)
     cursor += 1
     typed.append(type)
-    #if type == ord (sentence [sentence_index]):
-    for letter in typed:
-        if letter == sentence[sentence_index]:
+    for errorz in typed:
+        if errorz == 127:
+            typed.remove(errorz)
+    if type == ord(sentence[sentence_index]):
+        if typed == li_sentence[:sentence_index + 1]:
             sentence_index += 1
             sentence_len -= 1
-    if type == ord(" "):
-        answer.clear()
-        cursor = 0
-        answer.refresh()
+            if type == ord(" "):
+                answer.clear()
+                cursor = 0
+                answer.refresh()
     if type == 127:
         answer.delch(12, cursor)
         answer.delch(12, cursor - 1)
@@ -75,7 +80,6 @@ while sentence_len != 0:
         cursor -= 2
         typed.pop()
         answer.refresh()
-
 '''
 #incorporate into main code
 index_ = 0
