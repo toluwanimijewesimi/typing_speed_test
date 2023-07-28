@@ -1,21 +1,28 @@
 import curses
 
 stdscr = curses.initscr()
-answer = curses.newwin(15,15, 12,0)
-#curses.start_color
+display = curses.newwin(15, 30, 0, 0)
+answer = curses.newwin(15,30, 16,0)
+curses.start_color()
+curses.use_default_colors()
 
 #curses.noecho()
 curses.cbreak()
 stdscr.keypad(True)
 
+#initializes color pairs
+curses.init_pair(1, 2, -1)
+curses.init_pair(2, 1, -1)
+
 stdscr.clear()
 sentence = "The quick brown fox..."
 #word = "Hello World!"
-stdscr.addstr(10,0, sentence)
-stdscr.refresh()
+display.addstr(10,0, sentence)
+display.refresh()
 
 li_sentence = [] #empty list for all the letters in the sentece, in order
 typed = [] #empty list for all the letters the user has tpyed
+correct = []
 
 #appends all letters in sentence to the appropriate list
 for lett in sentence:
@@ -34,9 +41,10 @@ while sentence_len != 0:
     for errorz in typed:
         if errorz == 127:
             typed.remove(errorz)
-    #checks if entered letter matches expeted letter
+    #checks if entered letter matches expected letter
     if type == ord(sentence[sentence_index]):
-        #makes sure the complete sence is acurate and not jsut the current letter by comparing the list of typed letters and expected letters
+        correct.append(type)
+        #makes sure the complete sentence is acurate and not jsut the current letter by comparing the list of typed letters and expected letters
         if typed == li_sentence[:sentence_index + 1]:
             sentence_index += 1 #moves expected letter to next letter
             sentence_len -= 1 #reduces letters needed to be typed sentece is complted
@@ -53,6 +61,11 @@ while sentence_len != 0:
         cursor -= 2
         typed.pop()
         answer.refresh()
+    display.clear()
+    display.addstr(10, 0, sentence[:len(correct)], curses.color_pair(1))
+    display.addstr(10, len(correct), sentence[len(correct):len(typed)], curses.color_pair(2))
+    display.addstr(10, len(typed), sentence[len(typed):])
+    display.refresh()
 
 curses.nocbreak()
 stdscr.keypad(False)
