@@ -1,7 +1,7 @@
 import curses
 
 stdscr = curses.initscr()
-display = curses.newwin(15, 30, 0, 0)
+display = curses.newwin(15, 60, 0, 0)
 answer = curses.newwin(15,30, 16,0)
 curses.start_color()
 curses.use_default_colors()
@@ -12,7 +12,7 @@ stdscr.keypad(True)
 
 #initializes color pairs
 curses.init_pair(1, 2, -1)
-curses.init_pair(2, 1, -1)
+curses.init_pair(2, 7, 1)
 
 stdscr.clear()
 sentence = "The quick brown fox..."
@@ -59,12 +59,21 @@ while sentence_len != 0:
         answer.delch(12, cursor - 1)
         answer.delch(12, cursor - 2)
         cursor -= 2
-        typed.pop()
+        if correct == typed:
+            typed.pop()
+            correct.pop()
+            sentence_index -= 1
+            sentence_len += 1
+        else:
+            typed.pop()
         answer.refresh()
+    #highlight text based on wether the input is correct or not and add moving cursor
     display.clear()
     display.addstr(10, 0, sentence[:len(correct)], curses.color_pair(1))
     display.addstr(10, len(correct), sentence[len(correct):len(typed)], curses.color_pair(2))
-    display.addstr(10, len(typed), sentence[len(typed):])
+    display.addstr(10, len(typed), sentence[len(typed)], curses.A_REVERSE)
+    display.addstr(10, len(typed) + 1 , sentence[len(typed) + 1:])
+
     display.refresh()
 
 curses.nocbreak()
