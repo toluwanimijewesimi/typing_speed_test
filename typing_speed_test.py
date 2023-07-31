@@ -1,10 +1,13 @@
 import curses
 
 stdscr = curses.initscr()
-display = curses.newwin(15, 60, 0, 0)
-answer = curses.newwin(15,30, 16,0)
+display = curses.newwin(5, 80, 0, 0)
+answer = curses.newwin(5,30,5,0)
 curses.start_color()
 curses.use_default_colors()
+
+display.border(0,0,0,0,0,0,0,0)
+answer.border(0,0,0,0,0,0,0,0)
 
 #curses.noecho()
 curses.cbreak()
@@ -15,9 +18,9 @@ curses.init_pair(1, 2, -1)
 curses.init_pair(2, 7, 1)
 
 stdscr.clear()
-sentence = "The quick brown fox..."
+sentence = "And really, I'm gonna start to resent you for even asking me to stop drumming. And we're just gonna start to hate each other. And it's gonna get very... It's gonna be ugly. And so for those reasons, I'd rather just, you know, break it off clean... because I wanna be great." #The quick brown fox...
 #word = "Hello World!"
-display.addstr(10,0, sentence)
+display.addstr(1,1, sentence)
 display.refresh()
 
 li_sentence = [] #empty list for all the letters in the sentece, in order
@@ -28,13 +31,13 @@ correct = []
 for lett in sentence:
     li_sentence.append(ord(lett))
 
-cursor = 0 #starting point for cursor
+cursor = 1 #starting point for cursor
 sentence_len = len(sentence)
 sentence_index = 0 #tracks what letter the user needs to type currently
 
 #allows user to enter letters until they have typed all the letters
 while sentence_len != 0:
-    type = answer.getch(12,cursor)
+    type = answer.getch(1,cursor)
     cursor += 1 #incriments cursor to display next letter next to the previous letter
     typed.append(type)
     #removes all the backspace inputs that are automatically added to the tyed list
@@ -51,13 +54,14 @@ while sentence_len != 0:
             #clears line if previous word was spelt correclty and funtions as the space in the sentence
             if type == ord(" "):
                 answer.clear()
-                cursor = 0
+                answer.border(0,0,0,0,0,0,0,0)
+                cursor = 1
                 answer.refresh()
     #allows backspace to be used in terminal and removes the backspaced letter from letters in list of typed letters
     if type == 127:
-        answer.delch(12, cursor)
-        answer.delch(12, cursor - 1)
-        answer.delch(12, cursor - 2)
+        answer.delch(1, cursor)
+        answer.delch(1, cursor - 1)
+        answer.delch(1, cursor - 2)
         cursor -= 2
         if correct == typed:
             typed.pop()
@@ -69,10 +73,11 @@ while sentence_len != 0:
         answer.refresh()
     #highlight text based on wether the input is correct or not and add moving cursor
     display.clear()
-    display.addstr(10, 0, sentence[:len(correct)], curses.color_pair(1))
-    display.addstr(10, len(correct), sentence[len(correct):len(typed)], curses.color_pair(2))
-    display.addstr(10, len(typed), sentence[len(typed)], curses.A_REVERSE)
-    display.addstr(10, len(typed) + 1 , sentence[len(typed) + 1:])
+    display.border(0,0,0,0,0,0,0,0)
+    display.addstr(1, 1, sentence[:len(correct)], curses.color_pair(1))
+    display.addstr(1, len(correct) + 1, sentence[len(correct):len(typed)], curses.color_pair(2))
+    display.addstr(1, len(typed) + 1, sentence[len(typed)], curses.A_REVERSE)
+    display.addstr(1, len(typed) + 2, sentence[len(typed) + 1:])
 
     display.refresh()
 
