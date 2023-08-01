@@ -1,7 +1,7 @@
 import curses
 
 stdscr = curses.initscr()
-display = curses.newwin(5, 80, 0, 0)
+display = curses.newwin(5, 90, 0, 0)
 answer = curses.newwin(5,30,5,0)
 curses.start_color()
 curses.use_default_colors()
@@ -20,8 +20,6 @@ curses.init_pair(2, 7, 1)
 stdscr.clear()
 sentence = "And really, I'm gonna start to resent you for even asking me to stop drumming. And we're just gonna start to hate each other. And it's gonna get very... It's gonna be ugly. And so for those reasons, I'd rather just, you know, break it off clean... because I wanna be great." #The quick brown fox...
 #word = "Hello World!"
-display.addstr(1,1, sentence)
-display.refresh()
 
 li_sentence = [] #empty list for all the letters in the sentece, in order
 typed = [] #empty list for all the letters the user has tpyed
@@ -30,6 +28,21 @@ correct = []
 #appends all letters in sentence to the appropriate list
 for lett in sentence:
     li_sentence.append(ord(lett))
+
+#print out sentence list one letter at a time
+y = 1
+x = 1
+
+for a in li_sentence:
+    a = chr(a)
+    display.addstr(y,x, a)
+    if a == " ":
+        if x > 70 and x < 80:
+            x = 0
+            y += 1
+    display.refresh()
+    x += 1
+
 
 cursor = 1 #starting point for cursor
 sentence_len = len(sentence)
