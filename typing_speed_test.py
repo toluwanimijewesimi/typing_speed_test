@@ -87,13 +87,42 @@ while sentence_len != 0:
     #highlight text based on wether the input is correct or not and add moving cursor
     display.clear()
     display.border(0,0,0,0,0,0,0,0)
+
+    #print text on screen
+    y = 1
+    x = 1
+
+    for a in li_sentence:
+        a = chr(a)
+        display.addstr(y,x, a)
+        if a == " ":
+            if x > 70 and x < 80:
+                x = 0
+                y += 1
+        x += 1
+
+    #highlight correct text green
+    yy = 1
+    xx = 1
+    for a in correct:
+        a = chr(a)
+        display.chgat(yy, xx, 1, curses.color_pair(1))
+        if a == " ":
+            if xx > 70 and xx < 80:
+                xx = 0
+                yy += 1
+        display.refresh()
+        xx += 1
+
+    """
+    if li_sentence[w] == li_sentence[:sentence_index + 1]:
+
     display.addstr(1, 1, sentence[:len(correct)], curses.color_pair(1))
     display.addstr(1, len(correct) + 1, sentence[len(correct):len(typed)], curses.color_pair(2))
     display.addstr(1, len(typed) + 1, sentence[len(typed)], curses.A_REVERSE)
     display.addstr(1, len(typed) + 2, sentence[len(typed) + 1:])
-
-    display.refresh()
-
+    """
+    
 curses.nocbreak()
 stdscr.keypad(False)
 #curses.echo()
