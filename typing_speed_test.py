@@ -88,40 +88,62 @@ while sentence_len != 0:
     display.clear()
     display.border(0,0,0,0,0,0,0,0)
 
-    #print text on screen
-    y = 1
-    x = 1
-
-    for a in li_sentence:
-        a = chr(a)
-        display.addstr(y,x, a)
-        if a == " ":
-            if x > 70 and x < 80:
-                x = 0
-                y += 1
-        x += 1
-
-    #highlight correct text green
-    yy = 1
-    xx = 1
-    for a in correct:
-        a = chr(a)
-        display.chgat(yy, xx, 1, curses.color_pair(1))
-        if a == " ":
-            if xx > 70 and xx < 80:
-                xx = 0
-                yy += 1
+    #print correct as green
+    y1 = 1
+    x1 = 1
+  
+    for l in sentence[:len(correct)]:
+        display.addstr(y1, x1, l, curses.color_pair(1))
+        if l == " ":
+            if x1 > 70 and x1 < 80:
+                x1 = 0
+                y1 += 1
         display.refresh()
-        xx += 1
+        x1 += 1
+        
+    #print wrong as red
+    y2 = y1
+    x2 = x1
+    for l in sentence[len(correct):len(typed)]:
+            display.addstr(y2, x2, l, curses.color_pair(2))
+            if l == " ":
+                if x2 > 70 and x2 < 70:
+                    x2 = 0
+                    y2 += 1
+            display.refresh()
+            x2 += 1
 
+    #print cursor
+    y3 = y2
+    x3 = x2
+    for l in sentence[len(typed)]:
+        display.addstr(y3, x3, l, curses.A_REVERSE)
+        if l == " ":
+            if x3 > 70 and x3 < 70:
+                x3 = 0
+                y3 += 1
+        display.refresh()
+        x3 += 1
+    
     """
-    if li_sentence[w] == li_sentence[:sentence_index + 1]:
+    y4 = y3
+    x4 = x3
+    for l in sentence[len(typed) + 1:]:
+        display.addstr(y4, x4, l)
+        if l == " ":
+            if x4 > 70 and x4 < 80:
+                x4 = 0
+                y4 += 1
+        display.refresh()
+        x4 += 1
+    """
 
-    display.addstr(1, 1, sentence[:len(correct)], curses.color_pair(1))
-    display.addstr(1, len(correct) + 1, sentence[len(correct):len(typed)], curses.color_pair(2))
-    display.addstr(1, len(typed) + 1, sentence[len(typed)], curses.A_REVERSE)
-    display.addstr(1, len(typed) + 2, sentence[len(typed) + 1:])
-    """
+    
+    #display.addstr(y, x, sentence[:len(correct)], curses.color_pair(1))
+    #display.addstr(1, len(correct) + 1, sentence[len(correct):len(typed)], curses.color_pair(2))
+    #display.addstr(1, len(typed) + 1, sentence[len(typed)], curses.A_REVERSE)
+    #display.addstr(1, len(typed) + 2, sentence[len(typed) + 1:])
+    
     
 curses.nocbreak()
 stdscr.keypad(False)
