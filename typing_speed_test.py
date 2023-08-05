@@ -2,11 +2,13 @@ import curses
 
 stdscr = curses.initscr()
 display = curses.newwin(5, 90, 0, 0)
+new_display = curses.newwin(5, 90, 0, 0)
 answer = curses.newwin(5,30,5,0)
 curses.start_color()
 curses.use_default_colors()
 
 display.border(0,0,0,0,0,0,0,0)
+new_display.border(0,0,0,0,0,0,0,0)
 answer.border(0,0,0,0,0,0,0,0)
 
 #curses.noecho()
@@ -18,7 +20,7 @@ curses.init_pair(1, 2, -1)
 curses.init_pair(2, 7, 1)
 
 stdscr.clear()
-sentence = "And really, I'm gonna start to resent you for even asking me to stop drumming. And we're just gonna start to hate each other. And it's gonna get very... It's gonna be ugly. And so for those reasons, I'd rather just, you know, break it off clean... because I wanna be great." #The quick brown fox...
+sentence = "And really, I'm gonna start to resent you for even asking me to stop drumming. And we're just gonna start to hate each other. And it's gonna get very... It's gonna be ugly. And so for those reasons, I'd rather just, you know, break it off clean... because I wanna be great."
 #word = "Hello World!"
 
 li_sentence = [] #empty list for all the letters in the sentece, in order
@@ -85,62 +87,58 @@ while sentence_len != 0:
             typed.pop()
         answer.refresh()
     #highlight text based on wether the input is correct or not and add moving cursor
-    display.clear()
-    display.border(0,0,0,0,0,0,0,0)
-
+    
+    #display.clear()
+    #display.border(0,0,0,0,0,0,0,0)
+    
+    
     #print correct as green
+    new_display.clear()
     y1 = 1
     x1 = 1
   
     for l in sentence[:len(correct)]:
-        display.addstr(y1, x1, l, curses.color_pair(1))
+        new_display.addstr(y1, x1, l, curses.color_pair(1))
         if l == " ":
             if x1 > 70 and x1 < 80:
                 x1 = 0
                 y1 += 1
+        new_display.overlay(display)
+        new_display.refresh()
         display.refresh()
         x1 += 1
-        
+    
     #print wrong as red
     y2 = y1
     x2 = x1
     for l in sentence[len(correct):len(typed)]:
-            display.addstr(y2, x2, l, curses.color_pair(2))
+            new_display.addstr(y2, x2, l, curses.color_pair(2))
             if l == " ":
                 if x2 > 70 and x2 < 70:
                     x2 = 0
                     y2 += 1
+            new_display.overlay(display)
+            new_display.refresh()
             display.refresh()
             x2 += 1
 
     #print cursor
     y3 = y2
     x3 = x2
-    for l in sentence[len(typed)]:
-        display.addstr(y3, x3, l, curses.A_REVERSE)
-        if l == " ":
-            if x3 > 70 and x3 < 70:
-                x3 = 0
-                y3 += 1
-        display.refresh()
-        x3 += 1
-    
-    """
-    y4 = y3
-    x4 = x3
-    for l in sentence[len(typed) + 1:]:
-        display.addstr(y4, x4, l)
-        if l == " ":
-            if x4 > 70 and x4 < 80:
-                x4 = 0
-                y4 += 1
-        display.refresh()
-        x4 += 1
-    """
+    #for l in sentence[len(typed)]:
+    new_display.addstr(y3, x3, sentence[len(typed)], curses.A_REVERSE)
+    if l == " ":
+        if x3 > 70 and x3 < 70:
+            x3 = 0
+            y3 += 1
+    new_display.overlay(display)
+    new_display.refresh()
+    display.refresh()
+    x3 += 1
 
-    
+
     #display.addstr(y, x, sentence[:len(correct)], curses.color_pair(1))
-    #display.addstr(1, len(correct) + 1, sentence[len(correct):len(typed)], curses.color_pair(2))
+    #display.addstr(1, len(correct) + 1, senence[len(correct):len(typed)], curses.color_pair(2))
     #display.addstr(1, len(typed) + 1, sentence[len(typed)], curses.A_REVERSE)
     #display.addstr(1, len(typed) + 2, sentence[len(typed) + 1:])
     
