@@ -103,9 +103,7 @@ while sentence_len != 0:
             if x1 > 70 and x1 < 80:
                 x1 = 0
                 y1 += 1
-        new_display.overlay(display)
         new_display.refresh()
-        display.refresh()
         x1 += 1
     
     #print wrong as red
@@ -117,9 +115,7 @@ while sentence_len != 0:
                 if x2 > 70 and x2 < 70:
                     x2 = 0
                     y2 += 1
-            new_display.overlay(display)
             new_display.refresh()
-            display.refresh()
             x2 += 1
 
     #print cursor
@@ -131,10 +127,21 @@ while sentence_len != 0:
         if x3 > 70 and x3 < 70:
             x3 = 0
             y3 += 1
-    new_display.overlay(display)
     new_display.refresh()
-    display.refresh()
     x3 += 1
+
+    
+    y4 = y3
+    x4 = len(typed) + 2
+
+    for l in sentence[len(typed) + 1:]:
+        if l == " ":
+            if x4 > 70 and x4 < 80:
+                x4 = 0
+                y4 += 1
+        display.addstr(y4, x4, l)
+        display.refresh()
+        x4 += 1
 
 
     #display.addstr(y, x, sentence[:len(correct)], curses.color_pair(1))
