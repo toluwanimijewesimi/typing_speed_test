@@ -1,15 +1,17 @@
 import curses
+import time
 
 stdscr = curses.initscr()
-display = curses.newwin(5, 90, 0, 0)
-new_display = curses.newwin(5, 90, 0, 0)
-answer = curses.newwin(5,30,5,0)
+wpm_win = curses.newwin(5, 30, 0,0)
+display = curses.newwin(5, 90, 5, 0)
+answer = curses.newwin(5,30,10,0)
 curses.start_color()
 curses.use_default_colors()
 
 display.border(0,0,0,0,0,0,0,0)
-new_display.border(0,0,0,0,0,0,0,0)
 answer.border(0,0,0,0,0,0,0,0)
+wpm_win.border(0,0,0,0,0,0,0,0)
+wpm_win.refresh()
 
 #curses.noecho()
 curses.cbreak()
@@ -45,13 +47,23 @@ for a in li_sentence:
     display.refresh()
     x += 1
 
+wpm_win.addstr(1, 1, "WMP: 0")
+wpm_win.refresh()
 
 cursor = 1 #starting point for cursor
 sentence_len = len(sentence)
 sentence_index = 0 #tracks what letter the user needs to type currently
-
+""""
+#start timer
+if len(correct) != 0:
+    start_time = time.time()
+else:
+    start_time = 0
+"""
+start_time = time.time()
 #allows user to enter letters until they have typed all the letters
-while sentence_len != 0:
+while True:
+    
     type = answer.getch(1,cursor)
     cursor += 1 #incriments cursor to display next letter next to the previous letter
     typed.append(type)
@@ -72,6 +84,8 @@ while sentence_len != 0:
                 answer.border(0,0,0,0,0,0,0,0)
                 cursor = 1
                 answer.refresh()
+    else:
+        curses.beep()
     #allows backspace to be used in terminal and removes the backspaced letter from letters in list of typed letters
     if type == 127:
         answer.delch(1, cursor)
@@ -90,59 +104,78 @@ while sentence_len != 0:
     
     #display.clear()
     #display.border(0,0,0,0,0,0,0,0)
+
     
-    
+
     #print correct as green
-    new_display.clear()
+    #display.clear()
     y1 = 1
     x1 = 1
   
     for l in sentence[:len(correct)]:
-        new_display.addstr(y1, x1, l, curses.color_pair(1))
+        display.chgat(y1, x1, 1, curses.color_pair(1))
         if l == " ":
             if x1 > 70 and x1 < 80:
                 x1 = 0
                 y1 += 1
-        new_display.refresh()
+        display.refresh()
         x1 += 1
     
     #print wrong as red
     y2 = y1
     x2 = x1
     for l in sentence[len(correct):len(typed)]:
-            new_display.addstr(y2, x2, l, curses.color_pair(2))
+            display.chgat(y2, x2, 1, curses.color_pair(2))
             if l == " ":
                 if x2 > 70 and x2 < 70:
                     x2 = 0
                     y2 += 1
-            new_display.refresh()
+            display.refresh()
             x2 += 1
 
     #print cursor
     y3 = y2
     x3 = x2
     #for l in sentence[len(typed)]:
-    new_display.addstr(y3, x3, sentence[len(typed)], curses.A_REVERSE)
+    display.chgat(y3, x3, 1, curses.A_REVERSE)
     if l == " ":
         if x3 > 70 and x3 < 70:
             x3 = 0
             y3 += 1
-    new_display.refresh()
+    display.refresh()
     x3 += 1
 
-    
+    #clear deleted cursor
     y4 = y3
-    x4 = len(typed) + 2
+    x4 = x3
+    #for l in sentence[len(typed)]:
+    display.chgat(y4, x4, 1, curses.color_pair(0))
+    if l == " ":
+        if x4 > 70 and x4 < 70:
+            x4 = 0
+            y4 += 1
+    display.refresh()
+    x4 += 1
 
-    for l in sentence[len(typed) + 1:]:
-        if l == " ":
-            if x4 > 70 and x4 < 80:
-                x4 = 0
-                y4 += 1
-        display.addstr(y4, x4, l)
-        display.refresh()
-        x4 += 1
+    #xalculate wpm
+    end_time = time.time()
 
+    elapsed_time = end_time - start_time
+    sec_to_min = elapsed_time/60
+    wpm = (len(correct)/5)/sec_to_min
+    wpm = round(wpm)
+
+    #show wpm
+    wpm_win.clear()
+    wpm_win.border(0,0,0,0,0,0,0,0)
+    wpm_win.addstr(1, 1, f"WMP: {wpm}")
+    wpm_win.refresh()
+
+    if sentence_len == 0:
+        break
+
+
+    
 
     #display.addstr(y, x, sentence[:len(correct)], curses.color_pair(1))
     #display.addstr(1, len(correct) + 1, senence[len(correct):len(typed)], curses.color_pair(2))
