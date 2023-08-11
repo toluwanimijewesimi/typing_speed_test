@@ -35,7 +35,7 @@ while wait != ord (" ") and wait != (">"):
         wpm_win.clear()
     elif wait == ord(">"):
         wpm_win.clear()
-        wpm_win.addstr(1, 0, "Thanks for playing!")
+        wpm_win.addstr(1, 0, "Goodbye!")
         wpm_win.refresh()
         break
 
@@ -226,7 +226,7 @@ while play == True:
     elif wait == ord(">"):
         start == False
         wpm_win.clear()
-        wpm_win.addstr(1, 0, "Thanks for playing!")
+        wpm_win.addstr(1, 0, "Goodbye!")
         wpm_win.refresh()
         break
 
